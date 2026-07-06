@@ -71,6 +71,24 @@ test("journal escapes special characters and never injects markup", async ({ pag
   await expect(page.locator("#entries .note img")).toHaveCount(0);
 });
 
+test("start screen is operable via the Space key", async ({ page }) => {
+  await page.goto(PAGE);
+  await page.locator("#start").focus();
+  await page.keyboard.press("Space");
+  await expect(page.locator("#main")).toBeVisible();
+});
+
+test("counter renders integers (never NaN) even with a bad anniversary", async ({ page }) => {
+  await page.goto(PAGE);
+  await page.locator("#start").click();
+  await page.evaluate(() => {
+    window.MSARY.CONFIG.ANNIVERSARY = "oops-not-a-date";
+    window.MSARY.buildCounter();
+  });
+  const values = await page.locator("#counter .pill b").allTextContents();
+  expect(values).toEqual(["0", "0", "0"]);
+});
+
 test("reduced motion suppresses the falling-hearts animation", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto(PAGE);

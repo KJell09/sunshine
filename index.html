@@ -238,22 +238,34 @@ function ordinal(n) {
   const s = ["th","st","nd","rd"], v = n % 100;
   return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
+// Parse a YYYY-MM-DD anniversary; returns null if it's not a valid date (e.g.
+// mistyped during personalization) so callers can fall back to 0 instead of NaN.
+function parseDate(dateStr) {
+  const d = new Date(dateStr + "T00:00:00");
+  return isNaN(d.getTime()) ? null : d;
+}
 function daysSince(dateStr, now = new Date()) {
   // Compare calendar dates in UTC so the count isn't thrown off (±1) by
   // daylight-saving transitions, where a local "day" isn't exactly 24h.
-  const start = new Date(dateStr + "T00:00:00");
+  const start = parseDate(dateStr);
+  if (!start) return 0;
   const startUTC = Date.UTC(start.getFullYear(), start.getMonth(), start.getDate());
   const nowUTC = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
   return Math.max(0, Math.round((nowUTC - startUTC) / 86400000));
 }
 function monthsElapsed(dateStr, now = new Date()) {
-  const start = new Date(dateStr + "T00:00:00");
+  const start = parseDate(dateStr);
+  if (!start) return 0;
   let m = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
   if (now.getDate() < start.getDate()) m--;
   return Math.max(0, m);
 }
 function monthCount(now = new Date()) {
-  return CONFIG.MONTHS === "auto" ? monthsElapsed(CONFIG.ANNIVERSARY, now) : CONFIG.MONTHS;
+  if (CONFIG.MONTHS === "auto") return monthsElapsed(CONFIG.ANNIVERSARY, now);
+  // Coerce to a non-negative integer so a stray string can't render as NaN or
+  // inject markup when it flows into the counter's innerHTML.
+  const n = Math.floor(Number(CONFIG.MONTHS));
+  return Number.isFinite(n) && n >= 0 ? n : 0;
 }
 
 function buildCounter() {
@@ -359,11 +371,11 @@ const song = setupMusic();
 const start = $("start");
 start.addEventListener("click", () => open(song));
 start.addEventListener("keydown", (e) => {
-  if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(song); }
+  if (e.key === "Enter" || e.key === " " || e.code === "Space") { e.preventDefault(); open(song); }
 });
 
 // Exposed for automated tests (harmless in production).
-window.MSARY = { CONFIG, ordinal, daysSince, monthsElapsed, monthCount, buildJournal, escapeHtml };
+window.MSARY = { CONFIG, ordinal, daysSince, monthsElapsed, monthCount, buildCounter, buildJournal, escapeHtml };
 </script>
 </body>
 </html>

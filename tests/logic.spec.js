@@ -39,6 +39,29 @@ test("monthsElapsed never goes negative for a future anniversary", async ({ page
   expect(result).toBe(0);
 });
 
+test("date helpers return 0 for an invalid anniversary", async ({ page }) => {
+  const result = await page.evaluate((now) => ({
+    days: window.MSARY.daysSince("not-a-date", new Date(now)),
+    months: window.MSARY.monthsElapsed("2026-13-99", new Date(now)),
+  }), "2026-07-06T12:00:00");
+  expect(result).toEqual({ days: 0, months: 0 });
+});
+
+test("monthCount coerces MONTHS to a non-negative integer", async ({ page }) => {
+  const result = await page.evaluate((now) => {
+    const C = window.MSARY.CONFIG;
+    const original = C.MONTHS;
+    const out = {};
+    C.MONTHS = "5";   out.numericString = window.MSARY.monthCount(new Date(now));
+    C.MONTHS = 3;     out.number = window.MSARY.monthCount(new Date(now));
+    C.MONTHS = "abc"; out.garbage = window.MSARY.monthCount(new Date(now));
+    C.MONTHS = -4;    out.negative = window.MSARY.monthCount(new Date(now));
+    C.MONTHS = original;
+    return out;
+  }, "2026-07-06T12:00:00");
+  expect(result).toEqual({ numericString: 5, number: 3, garbage: 0, negative: 0 });
+});
+
 test("daysSince counts whole elapsed days and clamps at zero", async ({ page }) => {
   const call = (start, now) =>
     page.evaluate(([s, n]) => window.MSARY.daysSince(s, new Date(n)), [start, now]);
