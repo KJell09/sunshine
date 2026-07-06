@@ -42,3 +42,23 @@ python3 -m http.server 8000   # then open http://localhost:8000
   screen — it fills the display.
 - **Offline:** AirDrop `index.html` to her phone; it works with no internet
   (unless you added music, which needs the audio file alongside it).
+
+## Tests
+Automated tests keep the greeting correct as the project grows:
+
+- `tests/logic.spec.js` — deterministic unit tests of the date/ordinal helpers
+  (monthsary count, days-together, ordinal suffixes), with an injected date.
+- `tests/greeting.spec.js` — end-to-end tests of the rendered page (tap-to-open
+  reveal, title + counter, journal photo prints and notes, no console errors,
+  no horizontal scroll on mobile).
+
+Run them locally:
+
+```bash
+npm install
+npx playwright install chromium   # first time only
+npm test
+```
+
+CI (`.github/workflows/ci.yml`) runs the full suite on every push to `main`
+and on every pull request.

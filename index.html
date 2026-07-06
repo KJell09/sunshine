@@ -237,19 +237,18 @@ function ordinal(n) {
   const s = ["th","st","nd","rd"], v = n % 100;
   return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
-function daysSince(dateStr) {
+function daysSince(dateStr, now = new Date()) {
   const start = new Date(dateStr + "T00:00:00");
-  return Math.max(0, Math.floor((new Date() - start) / 86400000));
+  return Math.max(0, Math.floor((now - start) / 86400000));
 }
-function monthsElapsed(dateStr) {
+function monthsElapsed(dateStr, now = new Date()) {
   const start = new Date(dateStr + "T00:00:00");
-  const now = new Date();
   let m = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
   if (now.getDate() < start.getDate()) m--;
   return Math.max(0, m);
 }
-function monthCount() {
-  return CONFIG.MONTHS === "auto" ? monthsElapsed(CONFIG.ANNIVERSARY) : CONFIG.MONTHS;
+function monthCount(now = new Date()) {
+  return CONFIG.MONTHS === "auto" ? monthsElapsed(CONFIG.ANNIVERSARY, now) : CONFIG.MONTHS;
 }
 
 function buildCounter() {
@@ -347,6 +346,9 @@ start.addEventListener("click", () => open(song));
 start.addEventListener("keydown", (e) => {
   if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(song); }
 });
+
+// Exposed for automated tests (harmless in production).
+window.MSARY = { CONFIG, ordinal, daysSince, monthsElapsed, monthCount };
 </script>
 </body>
 </html>
