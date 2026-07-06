@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#ff6f91" />
-<title>Happy Monthsary 💖</title>
+<title>Happy Monthsary, Ms.D 💖</title>
 <style>
   /* ============================================================
      💖 HAPPY MONTHSARY — a cute, self-contained greeting page.
@@ -19,20 +19,21 @@
     --gold:    #ffcf6b;
     --cream:   #fff7fb;
     --ink:     #6b2b45;
+    --paper:   #fffdf6;
+    --tape:    rgba(255, 207, 107, .55);
     --shadow:  0 18px 50px rgba(230, 62, 109, .28);
+    --script:  "Snell Roundhand", "Bradley Hand", "Segoe Script", "Comic Sans MS", cursive;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body { margin: 0; height: 100%; }
+  html, body { margin: 0; }
+  html { scroll-behavior: smooth; }
   body {
-    min-height: 100dvh;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     color: var(--ink);
-    background: radial-gradient(120% 120% at 50% 0%, var(--blush) 0%, #ffd0e0 45%, #ffbcd4 100%);
-    overflow: hidden;
-    display: grid;
-    place-items: center;
+    background: radial-gradient(120% 90% at 50% 0%, var(--blush) 0%, #ffd0e0 45%, #ffbcd4 100%);
+    background-attachment: fixed;
+    overflow-x: hidden;
     text-align: center;
-    padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom);
   }
 
   /* ---- floating hearts / confetti layer ---- */
@@ -47,8 +48,6 @@
     100% { transform: translateY(115vh) rotate(320deg); opacity: 0; }
   }
 
-  /* ---- shared card / stage ---- */
-  .stage { position: relative; z-index: 2; width: min(560px, 92vw); }
   .card {
     background: var(--cream);
     border-radius: 28px;
@@ -57,13 +56,17 @@
     border: 1px solid rgba(255,255,255,.7);
   }
 
-  /* ---- start screen (tap to open) ---- */
-  #start { cursor: pointer; }
-  .envelope {
-    font-size: 84px; line-height: 1;
-    animation: bob 2.4s ease-in-out infinite;
-    filter: drop-shadow(0 12px 18px rgba(230,62,109,.35));
+  /* ---- start screen (tap to open) — full-screen overlay ---- */
+  #start {
+    position: fixed; inset: 0; z-index: 5;
+    display: grid; place-items: center; cursor: pointer;
+    padding: 24px;
+    background: radial-gradient(120% 90% at 50% 0%, var(--blush) 0%, #ffd0e0 45%, #ffbcd4 100%);
   }
+  #start .card { width: min(440px, 92vw); }
+  #start.hide { opacity: 0; visibility: hidden; transition: opacity .5s ease, visibility .5s; }
+  .envelope { font-size: 84px; line-height: 1; animation: bob 2.4s ease-in-out infinite;
+              filter: drop-shadow(0 12px 18px rgba(230,62,109,.35)); }
   @keyframes bob { 0%,100%{ transform: translateY(0) } 50%{ transform: translateY(-12px) } }
   #start h1 { margin: 18px 0 6px; font-size: clamp(24px, 7vw, 34px); }
   #start p  { margin: 0; opacity: .8; font-size: 16px; }
@@ -72,9 +75,14 @@
            box-shadow: 0 8px 20px rgba(230,62,109,.4); animation: pulse 1.8s ease-in-out infinite; }
   @keyframes pulse { 0%,100%{ transform: scale(1) } 50%{ transform: scale(1.06) } }
 
-  /* ---- greeting screen ---- */
-  #greeting { display: none; }
-  #greeting.show { display: block; animation: pop .7s cubic-bezier(.2,.9,.3,1.3) both; }
+  /* ---- main content (revealed after tap) ---- */
+  #main { display: none; position: relative; z-index: 2; }
+  #main.show { display: block; }
+
+  /* greeting screen */
+  .screen { min-height: 100dvh; display: grid; place-items: center;
+            padding: calc(env(safe-area-inset-top) + 20px) 18px 24px; }
+  #greeting .card { width: min(560px, 92vw); animation: pop .7s cubic-bezier(.2,.9,.3,1.3) both; }
   @keyframes pop { from{ transform: scale(.7); opacity:0 } to{ transform: scale(1); opacity:1 } }
 
   .eyebrow { letter-spacing: .18em; text-transform: uppercase; font-size: 12px;
@@ -83,23 +91,64 @@
            background: linear-gradient(90deg, var(--rose-dk), var(--rose), var(--gold));
            -webkit-background-clip: text; background-clip: text; color: transparent; }
   .subtitle { margin: 2px 0 18px; font-size: 18px; font-weight: 600; }
-
   .counter { display: flex; justify-content: center; gap: 10px; margin: 6px 0 20px; flex-wrap: wrap; }
   .pill { background: var(--blush); border-radius: 16px; padding: 12px 14px; min-width: 78px; }
   .pill b { display:block; font-size: 26px; color: var(--rose-dk); line-height:1; }
   .pill span { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; opacity: .75; }
-
   .message { font-size: 17px; line-height: 1.6; margin: 4px 6px 6px; white-space: pre-line; }
   .sign { margin-top: 16px; font-size: 18px; font-weight: 700; color: var(--rose-dk); }
 
+  .scroll-hint { margin-top: 22px; font-size: 14px; opacity: .8; }
+  .scroll-hint .arrow { display: block; font-size: 22px; margin-top: 4px; animation: nudge 1.6s ease-in-out infinite; }
+  @keyframes nudge { 0%,100%{ transform: translateY(0) } 50%{ transform: translateY(6px) } }
+
+  /* ---- journal section ---- */
+  #journal { padding: 10px 16px 70px; }
+  .journal-head { margin: 8px auto 26px; }
+  .journal-head h2 { font-family: var(--script); font-size: clamp(30px, 8vw, 44px);
+                     color: var(--rose-dk); margin: 0; }
+  .journal-head p { margin: 4px 0 0; opacity: .8; font-size: 15px; }
+
+  .entries { display: flex; flex-direction: column; gap: 34px; max-width: 720px; margin: 0 auto; }
+  .entry { display: flex; align-items: center; justify-content: center; gap: 18px; flex-wrap: wrap; }
+  .entry:nth-child(even) { flex-direction: row-reverse; }
+
+  /* polaroid photo print */
+  .polaroid { background: #fff; padding: 12px 12px 40px; border-radius: 4px;
+              box-shadow: 0 14px 30px rgba(107,43,69,.25); position: relative;
+              width: 220px; max-width: 78vw; transform: rotate(-3deg); flex: 0 0 auto; }
+  .entry:nth-child(even) .polaroid { transform: rotate(3deg); }
+  .polaroid::before { content: ""; position: absolute; top: -12px; left: 50%; transform: translateX(-50%) rotate(-4deg);
+                      width: 92px; height: 26px; background: var(--tape);
+                      box-shadow: 0 2px 4px rgba(0,0,0,.08); border-radius: 2px; }
+  .photo { aspect-ratio: 4/5; border-radius: 2px; overflow: hidden; display: grid; place-items: center;
+           background: linear-gradient(135deg, #ffe3ec, #ffd0e0); color: var(--rose-dk); }
+  .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .photo .ph { display: flex; flex-direction: column; align-items: center; gap: 6px; opacity: .75; }
+  .photo .ph .cam { font-size: 34px; }
+  .photo .ph small { font-size: 11px; letter-spacing: .05em; }
+  .polaroid .caption { font-family: var(--script); font-size: 20px; color: var(--ink);
+                       position: absolute; left: 0; right: 0; bottom: 8px; }
+
+  /* handwritten note beside the print */
+  .note { font-family: var(--script); font-size: 20px; line-height: 1.5; color: var(--ink);
+          background: var(--paper); border-radius: 10px; padding: 16px 18px;
+          box-shadow: 0 8px 20px rgba(107,43,69,.15); max-width: 260px;
+          background-image: repeating-linear-gradient(transparent, transparent 27px, rgba(230,62,109,.12) 28px);
+          transform: rotate(1.5deg); flex: 1 1 220px; text-align: left; }
+  .entry:nth-child(even) .note { transform: rotate(-1.5deg); }
+
+  .journal-foot { font-family: var(--script); font-size: 24px; color: var(--rose-dk); margin: 40px 0 0; }
+
   /* ---- mute button (only shown if music is enabled) ---- */
-  #mute { position: fixed; z-index: 3; right: 16px; top: calc(env(safe-area-inset-top) + 14px);
+  #mute { position: fixed; z-index: 6; right: 16px; top: calc(env(safe-area-inset-top) + 14px);
           display: none; width: 44px; height: 44px; border-radius: 50%; border: none;
           background: rgba(255,255,255,.85); font-size: 20px; cursor: pointer;
           box-shadow: 0 6px 16px rgba(230,62,109,.3); }
 
   @media (prefers-reduced-motion: reduce) {
-    .envelope, .pulse { animation: none; }
+    html { scroll-behavior: auto; }
+    .envelope, .pulse, .scroll-hint .arrow { animation: none; }
   }
 </style>
 </head>
@@ -107,27 +156,44 @@
   <div id="fx" aria-hidden="true"></div>
   <button id="mute" aria-label="Toggle music">🔊</button>
 
-  <div class="stage">
-    <!-- Start screen -->
-    <section id="start" class="card" role="button" tabindex="0" aria-label="Tap to open your surprise">
+  <!-- Start screen (tap to open) -->
+  <section id="start" role="button" tabindex="0" aria-label="Tap to open your surprise">
+    <div class="card">
       <div class="envelope">💌</div>
       <h1>A little something for you…</h1>
       <p>tap to open your surprise</p>
       <div class="pulse">Open 💖</div>
+    </div>
+  </section>
+
+  <!-- Main content -->
+  <main id="main">
+    <!-- Greeting -->
+    <section id="greeting" class="screen">
+      <div class="card">
+        <div class="eyebrow" id="eyebrow">For Ms.D</div>
+        <h2 class="title" id="title">Happy Monthsary 💖</h2>
+        <div class="subtitle" id="subtitle"></div>
+        <div class="counter" id="counter"></div>
+        <p class="message" id="message"></p>
+        <div class="sign" id="sign"></div>
+        <a class="scroll-hint" href="#journal">
+          our little journal
+          <span class="arrow">↓</span>
+        </a>
+      </div>
     </section>
 
-    <!-- Greeting screen -->
-    <section id="greeting" class="card" aria-live="polite">
-      <div class="eyebrow" id="eyebrow">Happy Monthsary</div>
-      <h2 class="title" id="title">Happy 6th Monthsary 💖</h2>
-      <div class="subtitle" id="subtitle">to my favorite person 🥰</div>
-
-      <div class="counter" id="counter"></div>
-
-      <p class="message" id="message"></p>
-      <div class="sign" id="sign"></div>
+    <!-- Journal -->
+    <section id="journal">
+      <div class="journal-head">
+        <h2 id="journal-title">Our Little Journal</h2>
+        <p id="journal-sub">a few of my favorite moments with you 🥰</p>
+      </div>
+      <div class="entries" id="entries"></div>
+      <p class="journal-foot" id="journal-foot"></p>
     </section>
-  </div>
+  </main>
 
   <!-- Optional song: drop an audio file next to this page and set MUSIC_SRC below. -->
   <audio id="song" loop preload="auto"></audio>
@@ -137,42 +203,60 @@
    ✏️  CONFIG — edit these to personalize your greeting.
    ============================================================ */
 const CONFIG = {
-  PARTNER_NAME:  "my love",                 // her name / nickname
-  ANNIVERSARY:   "2026-01-06",              // YYYY-MM-DD you got together
-  MONTHS:        6,                          // which monthsary this is
+  PARTNER_NAME:  "Ms.D",                    // what you call her (shown on the card)
+  FULL_NAME:     "Dona",                    // her real name (used in the journal)
+  ANNIVERSARY:   "2026-04-19",              // YYYY-MM-DD you got together
+  MONTHS:        "auto",                     // a number, or "auto" to compute from the date
   SUBTITLE:      "to my favorite person 🥰",// small line under the title
   MESSAGE:
-`Happy monthsary, my love. 💗
+`Happy monthsary, Ms.D. 💗
 
 Every single month with you feels like the best one yet.
 Thank you for your laugh, your hugs, and for choosing me
 every day. I love you more than words fit here.`,
   SIGN:          "— always yours ❤️",       // your signature
-  MUSIC_SRC:     ""                          // e.g. "our-song.mp3" (leave "" for none)
+  JOURNAL_FOOT:  "…and so many more to come. 💕",
+  MUSIC_SRC:     "",                         // e.g. "our-song.mp3" (leave "" for none)
+
+  /* Journal photo prints. Leave "src" empty to show a placeholder frame;
+     add a filename (e.g. "photos/first-date.jpg") or a data: URI later.
+     "caption" is the little label under the print; "note" is the handwritten note beside it. */
+  JOURNAL: [
+    { src: "", caption: "our first date",  note: "The day it all began. I was so nervous, but one smile from you and I knew. 💘" },
+    { src: "", caption: "that little cafe", note: "Coffee gets cold, but you never fail to warm my whole day, Ms.D." },
+    { src: "", caption: "just us",          note: "My favorite place isn't a place at all — it's wherever you are." },
+    { src: "", caption: "silly us",         note: "Thank you for laughing at my worst jokes like they're the best ones. 😄" }
+  ]
 };
 /* ============================================================ */
 
 const $ = (id) => document.getElementById(id);
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-// Ordinal helper: 1 -> "1st", 2 -> "2nd", 6 -> "6th"
 function ordinal(n) {
   const s = ["th","st","nd","rd"], v = n % 100;
   return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
-
 function daysSince(dateStr) {
   const start = new Date(dateStr + "T00:00:00");
+  return Math.max(0, Math.floor((new Date() - start) / 86400000));
+}
+function monthsElapsed(dateStr) {
+  const start = new Date(dateStr + "T00:00:00");
   const now = new Date();
-  return Math.max(0, Math.floor((now - start) / 86400000));
+  let m = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
+  if (now.getDate() < start.getDate()) m--;
+  return Math.max(0, m);
+}
+function monthCount() {
+  return CONFIG.MONTHS === "auto" ? monthsElapsed(CONFIG.ANNIVERSARY) : CONFIG.MONTHS;
 }
 
 function buildCounter() {
   const days = daysSince(CONFIG.ANNIVERSARY);
-  const weeks = Math.floor(days / 7);
   const cells = [
-    [CONFIG.MONTHS, "Months"],
-    [weeks, "Weeks"],
+    [monthCount(), "Months"],
+    [Math.floor(days / 7), "Weeks"],
     [days, "Days"],
   ];
   $("counter").innerHTML = cells
@@ -180,18 +264,35 @@ function buildCounter() {
     .join("");
 }
 
+function buildJournal() {
+  $("entries").innerHTML = CONFIG.JOURNAL.map((e) => {
+    const inner = e.src
+      ? `<img src="${e.src}" alt="${e.caption || "our photo"}">`
+      : `<div class="ph"><span class="cam">📷</span><small>add photo later</small></div>`;
+    return `
+      <div class="entry">
+        <figure class="polaroid">
+          <div class="photo">${inner}</div>
+          <figcaption class="caption">${e.caption || ""}</figcaption>
+        </figure>
+        <p class="note">${e.note || ""}</p>
+      </div>`;
+  }).join("");
+}
+
 function fillContent() {
-  $("title").textContent = `Happy ${ordinal(CONFIG.MONTHS)} Monthsary 💖`;
+  $("title").textContent = `Happy ${ordinal(monthCount())} Monthsary 💖`;
   $("eyebrow").textContent = `For ${CONFIG.PARTNER_NAME}`;
   $("subtitle").textContent = CONFIG.SUBTITLE;
   $("message").textContent = CONFIG.MESSAGE;
   $("sign").textContent = CONFIG.SIGN;
+  $("journal-foot").textContent = CONFIG.JOURNAL_FOOT;
   buildCounter();
+  buildJournal();
 }
 
 // ---- falling hearts / confetti ----
 const EMOJIS = ["💖","💕","💗","🌸","✨","💞","🩷","💝"];
-let fxTimer = null;
 function spawnHeart() {
   const el = document.createElement("div");
   el.className = "heart";
@@ -228,12 +329,12 @@ function open(song) {
   if (opened) return;
   opened = true;
   fillContent();
-  $("start").style.display = "none";
-  $("greeting").classList.add("show");
-  if (song) song.play().catch(() => {/* ignored until a real tap */});
+  $("main").classList.add("show");
+  $("start").classList.add("hide");
+  if (song) song.play().catch(() => {});
   if (!reduceMotion) {
     burst(28);
-    fxTimer = setInterval(spawnHeart, 320);
+    setInterval(spawnHeart, 320);
   } else {
     burst(6);
   }
