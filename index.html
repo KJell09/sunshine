@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#ff6f91" />
+<title>Happy Monthsary 💖</title>
+<style>
+  /* ============================================================
+     💖 HAPPY MONTHSARY — a cute, self-contained greeting page.
+     Everything (style + script) lives in this one file so you can
+     text the link, AirDrop the file, or screen-share it on iOS.
+     To personalize, edit the CONFIG block in the <script> below.
+     ============================================================ */
+  :root {
+    --blush:   #ffe3ec;
+    --rose:    #ff6f91;
+    --rose-dk: #e63e6d;
+    --gold:    #ffcf6b;
+    --cream:   #fff7fb;
+    --ink:     #6b2b45;
+    --shadow:  0 18px 50px rgba(230, 62, 109, .28);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    min-height: 100dvh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--ink);
+    background: radial-gradient(120% 120% at 50% 0%, var(--blush) 0%, #ffd0e0 45%, #ffbcd4 100%);
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom);
+  }
+
+  /* ---- floating hearts / confetti layer ---- */
+  #fx { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 1; }
+  .heart {
+    position: absolute; top: -8vh; font-size: 26px;
+    animation: fall linear forwards; will-change: transform, opacity;
+  }
+  @keyframes fall {
+    0%   { transform: translateY(-10vh) rotate(0deg);   opacity: 0; }
+    10%  { opacity: 1; }
+    100% { transform: translateY(115vh) rotate(320deg); opacity: 0; }
+  }
+
+  /* ---- shared card / stage ---- */
+  .stage { position: relative; z-index: 2; width: min(560px, 92vw); }
+  .card {
+    background: var(--cream);
+    border-radius: 28px;
+    padding: 34px 26px 30px;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(255,255,255,.7);
+  }
+
+  /* ---- start screen (tap to open) ---- */
+  #start { cursor: pointer; }
+  .envelope {
+    font-size: 84px; line-height: 1;
+    animation: bob 2.4s ease-in-out infinite;
+    filter: drop-shadow(0 12px 18px rgba(230,62,109,.35));
+  }
+  @keyframes bob { 0%,100%{ transform: translateY(0) } 50%{ transform: translateY(-12px) } }
+  #start h1 { margin: 18px 0 6px; font-size: clamp(24px, 7vw, 34px); }
+  #start p  { margin: 0; opacity: .8; font-size: 16px; }
+  .pulse { display:inline-block; margin-top:14px; padding:10px 20px; border-radius:999px;
+           background: var(--rose); color:#fff; font-weight:700; font-size:15px;
+           box-shadow: 0 8px 20px rgba(230,62,109,.4); animation: pulse 1.8s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{ transform: scale(1) } 50%{ transform: scale(1.06) } }
+
+  /* ---- greeting screen ---- */
+  #greeting { display: none; }
+  #greeting.show { display: block; animation: pop .7s cubic-bezier(.2,.9,.3,1.3) both; }
+  @keyframes pop { from{ transform: scale(.7); opacity:0 } to{ transform: scale(1); opacity:1 } }
+
+  .eyebrow { letter-spacing: .18em; text-transform: uppercase; font-size: 12px;
+             font-weight: 700; color: var(--rose-dk); opacity:.9; }
+  .title { margin: 8px 0 4px; font-size: clamp(30px, 9vw, 46px); line-height: 1.05;
+           background: linear-gradient(90deg, var(--rose-dk), var(--rose), var(--gold));
+           -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .subtitle { margin: 2px 0 18px; font-size: 18px; font-weight: 600; }
+
+  .counter { display: flex; justify-content: center; gap: 10px; margin: 6px 0 20px; flex-wrap: wrap; }
+  .pill { background: var(--blush); border-radius: 16px; padding: 12px 14px; min-width: 78px; }
+  .pill b { display:block; font-size: 26px; color: var(--rose-dk); line-height:1; }
+  .pill span { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; opacity: .75; }
+
+  .message { font-size: 17px; line-height: 1.6; margin: 4px 6px 6px; white-space: pre-line; }
+  .sign { margin-top: 16px; font-size: 18px; font-weight: 700; color: var(--rose-dk); }
+
+  /* ---- mute button (only shown if music is enabled) ---- */
+  #mute { position: fixed; z-index: 3; right: 16px; top: calc(env(safe-area-inset-top) + 14px);
+          display: none; width: 44px; height: 44px; border-radius: 50%; border: none;
+          background: rgba(255,255,255,.85); font-size: 20px; cursor: pointer;
+          box-shadow: 0 6px 16px rgba(230,62,109,.3); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .envelope, .pulse { animation: none; }
+  }
+</style>
+</head>
+<body>
+  <div id="fx" aria-hidden="true"></div>
+  <button id="mute" aria-label="Toggle music">🔊</button>
+
+  <div class="stage">
+    <!-- Start screen -->
+    <section id="start" class="card" role="button" tabindex="0" aria-label="Tap to open your surprise">
+      <div class="envelope">💌</div>
+      <h1>A little something for you…</h1>
+      <p>tap to open your surprise</p>
+      <div class="pulse">Open 💖</div>
+    </section>
+
+    <!-- Greeting screen -->
+    <section id="greeting" class="card" aria-live="polite">
+      <div class="eyebrow" id="eyebrow">Happy Monthsary</div>
+      <h2 class="title" id="title">Happy 6th Monthsary 💖</h2>
+      <div class="subtitle" id="subtitle">to my favorite person 🥰</div>
+
+      <div class="counter" id="counter"></div>
+
+      <p class="message" id="message"></p>
+      <div class="sign" id="sign"></div>
+    </section>
+  </div>
+
+  <!-- Optional song: drop an audio file next to this page and set MUSIC_SRC below. -->
+  <audio id="song" loop preload="auto"></audio>
+
+<script>
+/* ============================================================
+   ✏️  CONFIG — edit these to personalize your greeting.
+   ============================================================ */
+const CONFIG = {
+  PARTNER_NAME:  "my love",                 // her name / nickname
+  ANNIVERSARY:   "2026-01-06",              // YYYY-MM-DD you got together
+  MONTHS:        6,                          // which monthsary this is
+  SUBTITLE:      "to my favorite person 🥰",// small line under the title
+  MESSAGE:
+`Happy monthsary, my love. 💗
+
+Every single month with you feels like the best one yet.
+Thank you for your laugh, your hugs, and for choosing me
+every day. I love you more than words fit here.`,
+  SIGN:          "— always yours ❤️",       // your signature
+  MUSIC_SRC:     ""                          // e.g. "our-song.mp3" (leave "" for none)
+};
+/* ============================================================ */
+
+const $ = (id) => document.getElementById(id);
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// Ordinal helper: 1 -> "1st", 2 -> "2nd", 6 -> "6th"
+function ordinal(n) {
+  const s = ["th","st","nd","rd"], v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+}
+
+function daysSince(dateStr) {
+  const start = new Date(dateStr + "T00:00:00");
+  const now = new Date();
+  return Math.max(0, Math.floor((now - start) / 86400000));
+}
+
+function buildCounter() {
+  const days = daysSince(CONFIG.ANNIVERSARY);
+  const weeks = Math.floor(days / 7);
+  const cells = [
+    [CONFIG.MONTHS, "Months"],
+    [weeks, "Weeks"],
+    [days, "Days"],
+  ];
+  $("counter").innerHTML = cells
+    .map(([n, label]) => `<div class="pill"><b>${n}</b><span>${label}</span></div>`)
+    .join("");
+}
+
+function fillContent() {
+  $("title").textContent = `Happy ${ordinal(CONFIG.MONTHS)} Monthsary 💖`;
+  $("eyebrow").textContent = `For ${CONFIG.PARTNER_NAME}`;
+  $("subtitle").textContent = CONFIG.SUBTITLE;
+  $("message").textContent = CONFIG.MESSAGE;
+  $("sign").textContent = CONFIG.SIGN;
+  buildCounter();
+}
+
+// ---- falling hearts / confetti ----
+const EMOJIS = ["💖","💕","💗","🌸","✨","💞","🩷","💝"];
+let fxTimer = null;
+function spawnHeart() {
+  const el = document.createElement("div");
+  el.className = "heart";
+  el.textContent = EMOJIS[(Math.random() * EMOJIS.length) | 0];
+  el.style.left = Math.random() * 100 + "vw";
+  el.style.fontSize = (16 + Math.random() * 26) + "px";
+  const dur = 4 + Math.random() * 4;
+  el.style.animationDuration = dur + "s";
+  $("fx").appendChild(el);
+  setTimeout(() => el.remove(), dur * 1000 + 200);
+}
+function burst(n) { for (let i = 0; i < n; i++) setTimeout(spawnHeart, i * 40); }
+
+// ---- music (iOS needs the first user tap to start audio) ----
+function setupMusic() {
+  if (!CONFIG.MUSIC_SRC) return null;
+  const song = $("song");
+  song.src = CONFIG.MUSIC_SRC;
+  const btn = $("mute");
+  btn.style.display = "block";
+  let muted = false;
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    muted = !muted;
+    song.muted = muted;
+    btn.textContent = muted ? "🔇" : "🔊";
+  });
+  return song;
+}
+
+// ---- open sequence ----
+let opened = false;
+function open(song) {
+  if (opened) return;
+  opened = true;
+  fillContent();
+  $("start").style.display = "none";
+  $("greeting").classList.add("show");
+  if (song) song.play().catch(() => {/* ignored until a real tap */});
+  if (!reduceMotion) {
+    burst(28);
+    fxTimer = setInterval(spawnHeart, 320);
+  } else {
+    burst(6);
+  }
+}
+
+// ---- wire up ----
+const song = setupMusic();
+const start = $("start");
+start.addEventListener("click", () => open(song));
+start.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(song); }
+});
+</script>
+</body>
+</html>
