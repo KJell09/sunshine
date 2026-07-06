@@ -71,6 +71,17 @@ test("journal escapes special characters and never injects markup", async ({ pag
   await expect(page.locator("#entries .note img")).toHaveCount(0);
 });
 
+test("journal tolerates a non-array JOURNAL without breaking the page", async ({ page }) => {
+  await page.goto(PAGE);
+  await page.locator("#start").click();
+  await page.evaluate(() => {
+    window.MSARY.CONFIG.JOURNAL = "oops";
+    window.MSARY.buildJournal();
+  });
+  await expect(page.locator("#entries .entry")).toHaveCount(0);
+  await expect(page.locator("#title")).toContainText("Monthsary"); // rest still works
+});
+
 test("start screen is operable via the Space key", async ({ page }) => {
   await page.goto(PAGE);
   await page.locator("#start").focus();

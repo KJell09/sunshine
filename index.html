@@ -245,8 +245,10 @@ function parseDate(dateStr) {
   return isNaN(d.getTime()) ? null : d;
 }
 function daysSince(dateStr, now = new Date()) {
-  // Compare calendar dates in UTC so the count isn't thrown off (±1) by
-  // daylight-saving transitions, where a local "day" isn't exactly 24h.
+  // Count whole *local* calendar days, but normalize each date to a UTC
+  // midnight first so DST transitions (where a local day isn't exactly 24h)
+  // can't shift the result by ±1. Local getFullYear/Month/Date is intentional
+  // (not getUTC*) so the day flips at the user's local midnight.
   const start = parseDate(dateStr);
   if (!start) return 0;
   const startUTC = Date.UTC(start.getFullYear(), start.getMonth(), start.getDate());
@@ -290,7 +292,9 @@ function escapeHtml(value) {
 }
 
 function buildJournal() {
-  $("entries").innerHTML = CONFIG.JOURNAL.map((e) => {
+  // Tolerate a hand-edited CONFIG where JOURNAL was removed or isn't an array.
+  const entries = Array.isArray(CONFIG.JOURNAL) ? CONFIG.JOURNAL : [];
+  $("entries").innerHTML = entries.map((e) => {
     const caption = escapeHtml(e.caption);
     const note = escapeHtml(e.note);
     const inner = e.src
