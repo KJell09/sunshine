@@ -1,0 +1,12 @@
+{
+  "name": "happymonthsary",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A cute animated Happy Monthsary greeting page.",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1"
+  }
+}
