@@ -12,20 +12,32 @@ Open `index.html` and edit the **CONFIG** block near the bottom (inside `<script
 
 ```js
 const CONFIG = {
-  PARTNER_NAME: "my love",        // her name / nickname
-  ANNIVERSARY:  "2026-01-06",     // YYYY-MM-DD you got together
-  MONTHS:       6,                // which monthsary this is
+  PARTNER_NAME: "Ms.D",           // what you call her (shown on the card)
+  FULL_NAME:    "Dona",           // her real name (used in the journal)
+  ANNIVERSARY:  "2026-04-19",     // YYYY-MM-DD you got together
+  MONTHS:       "auto",           // a number, or "auto" to compute from the date
   SUBTITLE:     "to my favorite person 🥰",
   MESSAGE:      `your heartfelt note here...`,
   SIGN:         "— always yours ❤️",
-  MUSIC_SRC:    ""                // e.g. "our-song.mp3" (leave "" for none)
+  JOURNAL_FOOT: "…and so many more to come. 💕",
+  MUSIC_SRC:    "",               // e.g. "our-song.mp3" (leave "" for none)
+
+  // Journal photo prints. Leave "src" empty for a placeholder frame.
+  JOURNAL: [
+    { src: "", caption: "our first date", note: "The day it all began..." },
+    // add as many entries as you like
+  ]
 };
 ```
 
+- **Monthsary number:** leave `MONTHS: "auto"` to compute it from `ANNIVERSARY`,
+  or set a fixed number.
 - **Music:** put an audio file next to `index.html` and set `MUSIC_SRC` to its
   name. It starts on the first tap (iOS blocks autoplay before a tap) and a
   mute button appears.
-- **Photos:** optional — can be added later as embedded images.
+- **Photos:** add each memory to `JOURNAL` with a `caption` and `note`. Set
+  `src` to a filename (e.g. `photos/first-date.jpg`) or a `data:` URI when you
+  have the picture; until then it shows a "📷 add photo later" placeholder.
 
 ## Preview locally
 Just double-click `index.html`, or serve it:
