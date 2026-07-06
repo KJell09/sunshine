@@ -55,6 +55,30 @@ test("journal entries without a photo show the placeholder frame", async ({ page
   await expect(page.locator("#entries .photo .ph")).toHaveCount(withoutPhoto);
 });
 
+test("journal escapes special characters and never injects markup", async ({ page }) => {
+  await page.goto(PAGE);
+  await page.locator("#start").click();
+
+  await page.evaluate(() => {
+    window.MSARY.CONFIG.JOURNAL = [
+      { src: "", caption: "you & me", note: "I <3 you <img src=x onerror=alert(1)>" },
+    ];
+    window.MSARY.buildJournal();
+  });
+
+  await expect(page.locator("#entries .caption")).toHaveText("you & me");
+  await expect(page.locator("#entries .note")).toHaveText("I <3 you <img src=x onerror=alert(1)>");
+  await expect(page.locator("#entries .note img")).toHaveCount(0);
+});
+
+test("reduced motion suppresses the falling-hearts animation", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto(PAGE);
+  await page.locator("#start").click();
+  await page.waitForTimeout(500);
+  await expect(page.locator(".heart")).toHaveCount(0);
+});
+
 test("no horizontal scroll on a phone-sized viewport", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(PAGE);

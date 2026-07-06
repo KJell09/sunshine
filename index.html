@@ -148,7 +148,8 @@
 
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
-    .envelope, .pulse, .scroll-hint .arrow { animation: none; }
+    .envelope, .pulse, .scroll-hint .arrow,
+    #greeting .card, .heart { animation: none; }
   }
 </style>
 </head>
@@ -238,8 +239,12 @@ function ordinal(n) {
   return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
 function daysSince(dateStr, now = new Date()) {
+  // Compare calendar dates in UTC so the count isn't thrown off (±1) by
+  // daylight-saving transitions, where a local "day" isn't exactly 24h.
   const start = new Date(dateStr + "T00:00:00");
-  return Math.max(0, Math.floor((now - start) / 86400000));
+  const startUTC = Date.UTC(start.getFullYear(), start.getMonth(), start.getDate());
+  const nowUTC = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+  return Math.max(0, Math.round((nowUTC - startUTC) / 86400000));
 }
 function monthsElapsed(dateStr, now = new Date()) {
   const start = new Date(dateStr + "T00:00:00");
@@ -263,18 +268,29 @@ function buildCounter() {
     .join("");
 }
 
+// Escape values before they go into innerHTML so hand-written notes/captions
+// with characters like < & " render literally (e.g. "I <3 you") and can never
+// inject markup.
+function escapeHtml(value) {
+  return String(value == null ? "" : value).replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])
+  );
+}
+
 function buildJournal() {
   $("entries").innerHTML = CONFIG.JOURNAL.map((e) => {
+    const caption = escapeHtml(e.caption);
+    const note = escapeHtml(e.note);
     const inner = e.src
-      ? `<img src="${e.src}" alt="${e.caption || "our photo"}">`
+      ? `<img src="${escapeHtml(e.src)}" alt="${caption || "our photo"}">`
       : `<div class="ph"><span class="cam">📷</span><small>add photo later</small></div>`;
     return `
       <div class="entry">
         <figure class="polaroid">
           <div class="photo">${inner}</div>
-          <figcaption class="caption">${e.caption || ""}</figcaption>
+          <figcaption class="caption">${caption}</figcaption>
         </figure>
-        <p class="note">${e.note || ""}</p>
+        <p class="note">${note}</p>
       </div>`;
   }).join("");
 }
@@ -331,11 +347,10 @@ function open(song) {
   $("main").classList.add("show");
   $("start").classList.add("hide");
   if (song) song.play().catch(() => {});
+  // Honor reduced-motion: skip the falling-hearts animation entirely.
   if (!reduceMotion) {
     burst(28);
     setInterval(spawnHeart, 320);
-  } else {
-    burst(6);
   }
 }
 
@@ -348,7 +363,7 @@ start.addEventListener("keydown", (e) => {
 });
 
 // Exposed for automated tests (harmless in production).
-window.MSARY = { CONFIG, ordinal, daysSince, monthsElapsed, monthCount };
+window.MSARY = { CONFIG, ordinal, daysSince, monthsElapsed, monthCount, buildJournal, escapeHtml };
 </script>
 </body>
 </html>
