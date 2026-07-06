@@ -3,25 +3,27 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="theme-color" content="#ff6f91" />
-<title>Happy Monthsary, Ms.D 💖</title>
+<meta name="theme-color" content="#ffc21f" />
+<title>Happy Monthsary, Ms.D 🌻</title>
 <style>
   /* ============================================================
-     💖 HAPPY MONTHSARY — a cute, self-contained greeting page.
+     🌻 HAPPY MONTHSARY — a cute, self-contained greeting page.
+     Sunflower theme (Dona's favorite: yellow + sunflowers).
      Everything (style + script) lives in this one file so you can
      text the link, AirDrop the file, or screen-share it on iOS.
      To personalize, edit the CONFIG block in the <script> below.
      ============================================================ */
   :root {
-    --blush:   #ffe3ec;
-    --rose:    #ff6f91;
-    --rose-dk: #e63e6d;
-    --gold:    #ffcf6b;
-    --cream:   #fff7fb;
-    --ink:     #6b2b45;
-    --paper:   #fffdf6;
-    --tape:    rgba(255, 207, 107, .55);
-    --shadow:  0 18px 50px rgba(230, 62, 109, .28);
+    --butter:  #fff6d6;   /* soft sunlight */
+    --sun:     #ffc21f;   /* sunflower petal yellow */
+    --sun-dk:  #f0a500;   /* deep gold */
+    --amber:   #cf7a08;   /* amber — accent text (readable on cream) */
+    --seed:    #4a3218;   /* warm seed-brown ink */
+    --leaf:    #6f9e4b;   /* sunflower-leaf green */
+    --cream:   #fffdf5;   /* card */
+    --paper:   #fffdf2;   /* note paper */
+    --tape:    rgba(240, 165, 0, .5);
+    --shadow:  0 18px 50px rgba(150, 100, 10, .26);
     --script:  "Snell Roundhand", "Bradley Hand", "Segoe Script", "Comic Sans MS", cursive;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -29,16 +31,16 @@
   html { scroll-behavior: smooth; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    color: var(--ink);
-    background: radial-gradient(120% 90% at 50% 0%, var(--blush) 0%, #ffd0e0 45%, #ffbcd4 100%);
+    color: var(--seed);
+    background: radial-gradient(120% 90% at 50% 0%, var(--butter) 0%, #ffe58a 45%, #ffd23f 100%);
     background-attachment: fixed;
     overflow-x: hidden;
     text-align: center;
   }
 
-  /* ---- floating hearts / confetti layer ---- */
+  /* ---- falling sunflowers / petals layer ---- */
   #fx { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 1; }
-  .heart {
+  .bloom {
     position: absolute; top: -8vh; font-size: 26px;
     animation: fall linear forwards; will-change: transform, opacity;
   }
@@ -61,18 +63,18 @@
     position: fixed; inset: 0; z-index: 5;
     display: grid; place-items: center; cursor: pointer;
     padding: 24px;
-    background: radial-gradient(120% 90% at 50% 0%, var(--blush) 0%, #ffd0e0 45%, #ffbcd4 100%);
+    background: radial-gradient(120% 90% at 50% 0%, var(--butter) 0%, #ffe58a 45%, #ffd23f 100%);
   }
   #start .card { width: min(440px, 92vw); }
   #start.hide { opacity: 0; visibility: hidden; transition: opacity .5s ease, visibility .5s; }
-  .envelope { font-size: 84px; line-height: 1; animation: bob 2.4s ease-in-out infinite;
-              filter: drop-shadow(0 12px 18px rgba(230,62,109,.35)); }
+  .hero-bloom { font-size: 84px; line-height: 1; animation: bob 2.4s ease-in-out infinite;
+                filter: drop-shadow(0 12px 18px rgba(200,140,0,.4)); }
   @keyframes bob { 0%,100%{ transform: translateY(0) } 50%{ transform: translateY(-12px) } }
   #start h1 { margin: 18px 0 6px; font-size: clamp(24px, 7vw, 34px); }
   #start p  { margin: 0; opacity: .8; font-size: 16px; }
   .pulse { display:inline-block; margin-top:14px; padding:10px 20px; border-radius:999px;
-           background: var(--rose); color:#fff; font-weight:700; font-size:15px;
-           box-shadow: 0 8px 20px rgba(230,62,109,.4); animation: pulse 1.8s ease-in-out infinite; }
+           background: var(--sun); color: var(--seed); font-weight:800; font-size:15px;
+           box-shadow: 0 8px 20px rgba(200,140,0,.45); animation: pulse 1.8s ease-in-out infinite; }
   @keyframes pulse { 0%,100%{ transform: scale(1) } 50%{ transform: scale(1.06) } }
 
   /* ---- main content (revealed after tap) ---- */
@@ -86,19 +88,19 @@
   @keyframes pop { from{ transform: scale(.7); opacity:0 } to{ transform: scale(1); opacity:1 } }
 
   .eyebrow { letter-spacing: .18em; text-transform: uppercase; font-size: 12px;
-             font-weight: 700; color: var(--rose-dk); opacity:.9; }
+             font-weight: 700; color: var(--amber); opacity:.95; }
   .title { margin: 8px 0 4px; font-size: clamp(30px, 9vw, 46px); line-height: 1.05;
-           background: linear-gradient(90deg, var(--rose-dk), var(--rose), var(--gold));
+           background: linear-gradient(90deg, var(--amber), var(--sun), var(--leaf));
            -webkit-background-clip: text; background-clip: text; color: transparent; }
   .subtitle { margin: 2px 0 18px; font-size: 18px; font-weight: 600; }
   .counter { display: flex; justify-content: center; gap: 10px; margin: 6px 0 20px; flex-wrap: wrap; }
-  .pill { background: var(--blush); border-radius: 16px; padding: 12px 14px; min-width: 78px; }
-  .pill b { display:block; font-size: 26px; color: var(--rose-dk); line-height:1; }
+  .pill { background: #fff2c4; border-radius: 16px; padding: 12px 14px; min-width: 78px; }
+  .pill b { display:block; font-size: 26px; color: var(--amber); line-height:1; font-variant-numeric: tabular-nums; }
   .pill span { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; opacity: .75; }
   .message { font-size: 17px; line-height: 1.6; margin: 4px 6px 6px; white-space: pre-line; }
-  .sign { margin-top: 16px; font-size: 18px; font-weight: 700; color: var(--rose-dk); }
+  .sign { margin-top: 16px; font-size: 18px; font-weight: 700; color: var(--amber); }
 
-  .scroll-hint { margin-top: 22px; font-size: 14px; opacity: .8; }
+  .scroll-hint { margin-top: 22px; font-size: 14px; opacity: .85; color: var(--seed); text-decoration: none; }
   .scroll-hint .arrow { display: block; font-size: 22px; margin-top: 4px; animation: nudge 1.6s ease-in-out infinite; }
   @keyframes nudge { 0%,100%{ transform: translateY(0) } 50%{ transform: translateY(6px) } }
 
@@ -106,7 +108,7 @@
   #journal { padding: 10px 16px 70px; }
   .journal-head { margin: 8px auto 26px; }
   .journal-head h2 { font-family: var(--script); font-size: clamp(30px, 8vw, 44px);
-                     color: var(--rose-dk); margin: 0; }
+                     color: var(--amber); margin: 0; }
   .journal-head p { margin: 4px 0 0; opacity: .8; font-size: 15px; }
 
   .entries { display: flex; flex-direction: column; gap: 34px; max-width: 720px; margin: 0 auto; }
@@ -115,41 +117,43 @@
 
   /* polaroid photo print */
   .polaroid { background: #fff; padding: 12px 12px 40px; border-radius: 4px;
-              box-shadow: 0 14px 30px rgba(107,43,69,.25); position: relative;
+              box-shadow: 0 14px 30px rgba(120,85,20,.28); position: relative;
               width: 220px; max-width: 78vw; transform: rotate(-3deg); flex: 0 0 auto; }
   .entry:nth-child(even) .polaroid { transform: rotate(3deg); }
   .polaroid::before { content: ""; position: absolute; top: -12px; left: 50%; transform: translateX(-50%) rotate(-4deg);
                       width: 92px; height: 26px; background: var(--tape);
                       box-shadow: 0 2px 4px rgba(0,0,0,.08); border-radius: 2px; }
   .photo { aspect-ratio: 4/5; border-radius: 2px; overflow: hidden; display: grid; place-items: center;
-           background: linear-gradient(135deg, #ffe3ec, #ffd0e0); color: var(--rose-dk); }
+           background: linear-gradient(135deg, #fff2c4, #ffe58a); color: var(--amber); }
   .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .photo .ph { display: flex; flex-direction: column; align-items: center; gap: 6px; opacity: .75; }
+  .photo .ph { display: flex; flex-direction: column; align-items: center; gap: 6px; opacity: .8; }
   .photo .ph .cam { font-size: 34px; }
   .photo .ph small { font-size: 11px; letter-spacing: .05em; }
-  .polaroid .caption { font-family: var(--script); font-size: 20px; color: var(--ink);
+  .polaroid .caption { font-family: var(--script); font-size: 20px; color: var(--seed);
                        position: absolute; left: 0; right: 0; bottom: 8px; }
 
   /* handwritten note beside the print */
-  .note { font-family: var(--script); font-size: 20px; line-height: 1.5; color: var(--ink);
+  .note { font-family: var(--script); font-size: 20px; line-height: 1.5; color: var(--seed);
           background: var(--paper); border-radius: 10px; padding: 16px 18px;
-          box-shadow: 0 8px 20px rgba(107,43,69,.15); max-width: 260px;
-          background-image: repeating-linear-gradient(transparent, transparent 27px, rgba(230,62,109,.12) 28px);
+          box-shadow: 0 8px 20px rgba(120,85,20,.16); max-width: 260px;
+          background-image: repeating-linear-gradient(transparent, transparent 27px, rgba(111,158,75,.18) 28px);
           transform: rotate(1.5deg); flex: 1 1 220px; text-align: left; }
   .entry:nth-child(even) .note { transform: rotate(-1.5deg); }
 
-  .journal-foot { font-family: var(--script); font-size: 24px; color: var(--rose-dk); margin: 40px 0 0; }
+  .journal-foot { font-family: var(--script); font-size: 24px; color: var(--amber); margin: 40px 0 0; }
 
   /* ---- mute button (only shown if music is enabled) ---- */
   #mute { position: fixed; z-index: 6; right: 16px; top: calc(env(safe-area-inset-top) + 14px);
           display: none; width: 44px; height: 44px; border-radius: 50%; border: none;
-          background: rgba(255,255,255,.85); font-size: 20px; cursor: pointer;
-          box-shadow: 0 6px 16px rgba(230,62,109,.3); }
+          background: rgba(255,255,255,.9); font-size: 20px; cursor: pointer;
+          box-shadow: 0 6px 16px rgba(200,140,0,.35); }
+
+  :focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; border-radius: 6px; }
 
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
-    .envelope, .pulse, .scroll-hint .arrow,
-    #greeting .card, .heart { animation: none; }
+    .hero-bloom, .pulse, .scroll-hint .arrow,
+    #greeting .card, .bloom { animation: none; }
   }
 </style>
 </head>
@@ -160,10 +164,10 @@
   <!-- Start screen (tap to open) -->
   <section id="start" role="button" tabindex="0" aria-label="Tap to open your surprise">
     <div class="card">
-      <div class="envelope">💌</div>
+      <div class="hero-bloom">🌻</div>
       <h1>A little something for you…</h1>
       <p>tap to open your surprise</p>
-      <div class="pulse">Open 💖</div>
+      <div class="pulse">Open 🌻</div>
     </div>
   </section>
 
@@ -173,7 +177,7 @@
     <section id="greeting" class="screen">
       <div class="card">
         <div class="eyebrow" id="eyebrow">For Ms.D</div>
-        <h2 class="title" id="title">Happy Monthsary 💖</h2>
+        <h2 class="title" id="title">Happy Monthsary 🌻</h2>
         <div class="subtitle" id="subtitle"></div>
         <div class="counter" id="counter"></div>
         <p class="message" id="message"></p>
@@ -189,7 +193,7 @@
     <section id="journal">
       <div class="journal-head">
         <h2 id="journal-title">Our Little Journal</h2>
-        <p id="journal-sub">a few of my favorite moments with you 🥰</p>
+        <p id="journal-sub">a few of my favorite moments with you 🌻</p>
       </div>
       <div class="entries" id="entries"></div>
       <p class="journal-foot" id="journal-foot"></p>
@@ -208,24 +212,25 @@ const CONFIG = {
   FULL_NAME:     "Dona",                    // her real name (used in the journal)
   ANNIVERSARY:   "2026-04-19",              // YYYY-MM-DD you got together
   MONTHS:        "auto",                     // a number, or "auto" to compute from the date
-  SUBTITLE:      "to my favorite person 🥰",// small line under the title
+  SUBTITLE:      "to my sunshine 🌻",        // small line under the title
   MESSAGE:
-`Happy monthsary, Ms.D. 💗
+`Happy monthsary, Ms.D. 🌻
 
 Every single month with you feels like the best one yet.
+You're my sunflower — always turning my gray days bright.
 Thank you for your laugh, your hugs, and for choosing me
 every day. I love you more than words fit here.`,
-  SIGN:          "— always yours ❤️",       // your signature
-  JOURNAL_FOOT:  "…and so many more to come. 💕",
+  SIGN:          "— always yours 🌻",       // your signature
+  JOURNAL_FOOT:  "…and so many more to come. 💛",
   MUSIC_SRC:     "",                         // e.g. "our-song.mp3" (leave "" for none)
 
   /* Journal photo prints. Leave "src" empty to show a placeholder frame;
      add a filename (e.g. "photos/first-date.jpg") or a data: URI later.
      "caption" is the little label under the print; "note" is the handwritten note beside it. */
   JOURNAL: [
-    { src: "", caption: "our first date",  note: "The day it all began. I was so nervous, but one smile from you and I knew. 💘" },
+    { src: "", caption: "our first date",  note: "The day it all began. I was so nervous, but one smile from you and I knew. 🌻" },
     { src: "", caption: "that little cafe", note: "Coffee gets cold, but you never fail to warm my whole day, Ms.D." },
-    { src: "", caption: "just us",          note: "My favorite place isn't a place at all — it's wherever you are." },
+    { src: "", caption: "just us",          note: "My favorite place isn't a place at all — it's wherever you are. 💛" },
     { src: "", caption: "silly us",         note: "Thank you for laughing at my worst jokes like they're the best ones. 😄" }
   ]
 };
@@ -312,7 +317,7 @@ function buildJournal() {
 }
 
 function fillContent() {
-  $("title").textContent = `Happy ${ordinal(monthCount())} Monthsary 💖`;
+  $("title").textContent = `Happy ${ordinal(monthCount())} Monthsary 🌻`;
   $("eyebrow").textContent = `For ${CONFIG.PARTNER_NAME}`;
   $("subtitle").textContent = CONFIG.SUBTITLE;
   $("message").textContent = CONFIG.MESSAGE;
@@ -322,11 +327,11 @@ function fillContent() {
   buildJournal();
 }
 
-// ---- falling hearts / confetti ----
-const EMOJIS = ["💖","💕","💗","🌸","✨","💞","🩷","💝"];
-function spawnHeart() {
+// ---- falling sunflowers / petals ----
+const EMOJIS = ["🌻","🌼","💛","🌿","✨","🐝"];
+function spawnBloom() {
   const el = document.createElement("div");
-  el.className = "heart";
+  el.className = "bloom";
   el.textContent = EMOJIS[(Math.random() * EMOJIS.length) | 0];
   el.style.left = Math.random() * 100 + "vw";
   el.style.fontSize = (16 + Math.random() * 26) + "px";
@@ -335,7 +340,7 @@ function spawnHeart() {
   $("fx").appendChild(el);
   setTimeout(() => el.remove(), dur * 1000 + 200);
 }
-function burst(n) { for (let i = 0; i < n; i++) setTimeout(spawnHeart, i * 40); }
+function burst(n) { for (let i = 0; i < n; i++) setTimeout(spawnBloom, i * 40); }
 
 // ---- music (iOS needs the first user tap to start audio) ----
 function setupMusic() {
@@ -363,10 +368,10 @@ function open(song) {
   $("main").classList.add("show");
   $("start").classList.add("hide");
   if (song) song.play().catch(() => {});
-  // Honor reduced-motion: skip the falling-hearts animation entirely.
+  // Honor reduced-motion: skip the falling-blooms animation entirely.
   if (!reduceMotion) {
     burst(28);
-    setInterval(spawnHeart, 320);
+    setInterval(spawnBloom, 320);
   }
 }
 

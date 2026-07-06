@@ -100,12 +100,12 @@ test("counter renders integers (never NaN) even with a bad anniversary", async (
   expect(values).toEqual(["0", "0", "0"]);
 });
 
-test("reduced motion suppresses the falling-hearts animation", async ({ page }) => {
+test("reduced motion suppresses the falling-blooms animation", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto(PAGE);
   await page.locator("#start").click();
   await page.waitForTimeout(500);
-  await expect(page.locator(".heart")).toHaveCount(0);
+  await expect(page.locator(".bloom")).toHaveCount(0);
 });
 
 test("no horizontal scroll on a phone-sized viewport", async ({ page }) => {
