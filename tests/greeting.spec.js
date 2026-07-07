@@ -19,20 +19,21 @@ test("tapping open reveals the greeting with no console errors", async ({ page }
   await page.locator("#start").click();
 
   await expect(page.locator("#main")).toBeVisible();
-  await expect(page.locator("#title")).toContainText("Monthsary");
+  await expect(page.locator("#title")).toContainText("Anniversary");
   await expect(page.locator("#counter .pill")).toHaveCount(3);
   expect(errors).toEqual([]);
 });
 
-test("title and counter reflect the auto-computed monthsary", async ({ page }) => {
+test("title and counter reflect the anniversary and time together", async ({ page }) => {
   await page.goto(PAGE);
   await page.locator("#start").click();
 
-  const months = await page.evaluate(() => window.MSARY.monthCount());
-  const ordinal = await page.evaluate((m) => window.MSARY.ordinal(m), months);
+  const num = await page.evaluate(() => window.MSARY.anniversaryNumber());
+  const ordinal = await page.evaluate((n) => window.MSARY.ordinal(n), num);
+  const years = await page.evaluate(() => window.MSARY.elapsed(window.MSARY.CONFIG.ANNIVERSARY).years);
 
-  await expect(page.locator("#title")).toContainText(`Happy ${ordinal} Monthsary`);
-  await expect(page.locator("#counter .pill").first().locator("b")).toHaveText(String(months));
+  await expect(page.locator("#title")).toContainText(`Happy ${ordinal} Anniversary`);
+  await expect(page.locator("#counter .pill").first().locator("b")).toHaveText(String(years));
 });
 
 test("journal renders one photo print and one note per configured entry", async ({ page }) => {
@@ -79,7 +80,7 @@ test("journal tolerates a non-array JOURNAL without breaking the page", async ({
     window.MSARY.buildJournal();
   });
   await expect(page.locator("#entries .entry")).toHaveCount(0);
-  await expect(page.locator("#title")).toContainText("Monthsary"); // rest still works
+  await expect(page.locator("#title")).toContainText("Anniversary"); // rest still works
 });
 
 test("start screen is operable via the Space key", async ({ page }) => {

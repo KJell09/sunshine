@@ -1,8 +1,8 @@
-# HappyMonthsary 🌻
+# Sunshine 🌻
 
-A cute, self-contained **Happy Monthsary** greeting page (`index.html`) for Ms.D.
+A cute, self-contained **anniversary** greeting page (`index.html`) for Ms.D.
 Tap to open, then falling sunflowers, an animated title, a live
-*months / weeks / days together* counter, a personal message, a soft acoustic
+*years / months / days together* counter, a personal message, a soft acoustic
 love song, and a photo journal of your memories.
 
 It's one file with no external dependencies, so it works as a shared link or
@@ -22,7 +22,7 @@ Everything lives in the **CONFIG** block near the bottom of `index.html`
 const CONFIG = {
   PARTNER_NAME: "Ms.D",                    // what you call her (shown everywhere)
   ANNIVERSARY:  "2026-04-19",              // YYYY-MM-DD you got together
-  MONTHS:       "auto",                    // a number, or "auto" to compute from the date
+  ANNIVERSARY_YEAR: 1,                     // which anniversary this celebrates, or "auto"
   SUBTITLE:     "to my sunshine 🌻",
   MESSAGE:      `your heartfelt note here...`,
   SIGN:         "Always yours 🌻",
@@ -36,7 +36,7 @@ const CONFIG = {
 };
 ```
 
-- **Monthsary number:** `"auto"` computes it from `ANNIVERSARY`, or set a number.
+- **Anniversary number:** set `ANNIVERSARY_YEAR` (e.g. `1`), or `"auto"` to compute completed years from `ANNIVERSARY`.
 - **Photos:** each `JOURNAL` entry takes a `src` (a file in `photos/`, or a
   `data:` URI), a `date` shown as a small stamp, a `caption`, and a `note`.
   Leave `src` empty for a "📷 add photo later" placeholder.
