@@ -1,10 +1,10 @@
-# HappyMonthsary 💖
+# HappyMonthsary 🌻
 
 A cute, animated **Happy Monthsary** greeting in a single self-contained web page
-(`index.html`). Tap to open → confetti + floating hearts, an animated title, a
+(`index.html`). Tap to open, then confetti and falling sunflowers, an animated title, a
 live *months / weeks / days together* counter, and your personal message.
 
-Perfect for **sending online as a link** or **screen-sharing on iOS** — it opens
+Perfect for **sending online as a link** or **screen-sharing on iOS**. It opens
 full-screen in Safari with no external dependencies.
 
 ## Personalize it
@@ -18,7 +18,7 @@ const CONFIG = {
   MONTHS:       "auto",           // a number, or "auto" to compute from the date
   SUBTITLE:     "to my favorite person 🥰",
   MESSAGE:      `your heartfelt note here...`,
-  SIGN:         "— always yours ❤️",
+  SIGN:         "Always yours 🌻",
   JOURNAL_FOOT: "…and so many more to come. 💕",
   MUSIC_SRC:    "",               // e.g. "our-song.mp3" (leave "" for none)
 
@@ -49,18 +49,18 @@ python3 -m http.server 8000   # then open http://localhost:8000
 ## Share it
 - **Live link (auto-deployed):** every push to `main` is published to GitHub
   Pages by `.github/workflows/deploy-pages.yml`, so the greeting is live at
-  **https://kjell09.github.io/HappyMonthsary/** — text her that URL.
+  **https://kjell09.github.io/HappyMonthsary/**. Text her that URL.
 - **iOS screen share:** open the link (or the file) in Safari and share your
-  screen — it fills the display.
+  screen; it fills the display.
 - **Offline:** AirDrop `index.html` to her phone; it works with no internet
   (unless you added music, which needs the audio file alongside it).
 
 ## Tests
 Automated tests keep the greeting correct as the project grows:
 
-- `tests/logic.spec.js` — deterministic unit tests of the date/ordinal helpers
+- `tests/logic.spec.js`: deterministic unit tests of the date/ordinal helpers
   (monthsary count, days-together, ordinal suffixes), with an injected date.
-- `tests/greeting.spec.js` — end-to-end tests of the rendered page (tap-to-open
+- `tests/greeting.spec.js`: end-to-end tests of the rendered page (tap-to-open
   reveal, title + counter, journal photo prints and notes, no console errors,
   no horizontal scroll on mobile).
 

@@ -7,7 +7,7 @@
 <title>Happy Monthsary, Ms.D 🌻</title>
 <style>
   /* ============================================================
-     🌻 HAPPY MONTHSARY — a cute, self-contained greeting page.
+     🌻 HAPPY MONTHSARY: a cute, self-contained greeting page.
      Sunflower theme (Dona's favorite: yellow + sunflowers).
      Everything (style + script) lives in this one file so you can
      text the link, AirDrop the file, or screen-share it on iOS.
@@ -17,7 +17,7 @@
     --butter:  #fff6d6;   /* soft sunlight */
     --sun:     #ffc21f;   /* sunflower petal yellow */
     --sun-dk:  #f0a500;   /* deep gold */
-    --amber:   #cf7a08;   /* amber — accent text (readable on cream) */
+    --amber:   #cf7a08;   /* amber, accent text (readable on cream) */
     --seed:    #4a3218;   /* warm seed-brown ink */
     --leaf:    #6f9e4b;   /* sunflower-leaf green */
     --cream:   #fffdf5;   /* card */
@@ -58,7 +58,7 @@
     border: 1px solid rgba(255,255,255,.7);
   }
 
-  /* ---- start screen (tap to open) — full-screen overlay ---- */
+  /* ---- start screen (tap to open): full-screen overlay ---- */
   #start {
     position: fixed; inset: 0; z-index: 5;
     display: grid; place-items: center; cursor: pointer;
@@ -208,7 +208,7 @@
 
 <script>
 /* ============================================================
-   ✏️  CONFIG — edit these to personalize your greeting.
+   ✏️  CONFIG: edit these to personalize your greeting.
    ============================================================ */
 const CONFIG = {
   PARTNER_NAME:  "Ms.D",                    // what you call her (shown on the card)
@@ -220,10 +220,10 @@ const CONFIG = {
 `Happy monthsary, Ms.D. 🌻
 
 Every single month with you feels like the best one yet.
-You're my sunflower — always turning my gray days bright.
+You're my sunflower, always turning my gray days bright.
 Thank you for your laugh, your hugs, and for choosing me
 every day. I love you more than words fit here.`,
-  SIGN:          "— always yours 🌻",       // your signature
+  SIGN:          "Always yours 🌻",          // your signature
   JOURNAL_FOOT:  "…and so many more to come. 💛",
   MUSIC_SRC:     "",                         // e.g. "our-song.mp3" (leave "" for none)
 
@@ -231,11 +231,11 @@ every day. I love you more than words fit here.`,
      add a filename (e.g. "photos/first-date.jpg") or a data: URI later.
      "caption" is the little label under the print; "note" is the handwritten note beside it. */
   JOURNAL: [
-    { src: "photos/first-date.jpg",        date: "02-01-2026", caption: "our first date",        note: "The day it all began. One smile from you and I was done for. 🌻" },
-    { src: "photos/first-valentines.jpg",  date: "14-02-2026", caption: "our first Valentine's", note: "My favorite Valentine — now, and every year after. 💛" },
+    { src: "photos/first-date.jpg",        date: "02-01-2026", caption: "our first date",        note: "The day it all began. I was so nervous, but that's when I decided I wanted to be with you. 🌻" },
+    { src: "photos/first-valentines.jpg",  date: "14-02-2026", caption: "our first Valentine's", note: "My favorite Valentine, now and every year after. 💛" },
     { src: "photos/first-birthday.jpg",    date: "26-04-2026", caption: "your birthday",         note: "Your first birthday together. I just wanted to make your day as bright as you make mine." },
     { src: "photos/graduation.jpg",        date: "13-05-2026", caption: "graduation day",        note: "So proud of you, my brilliant sunflower. You did that. 🎓" },
-    { src: "photos/first-trip-abroad.jpg", date: "28-06-2026", caption: "our first trip abroad", note: "New country, same favorite view: you. ✈️🌻" }
+    { src: "photos/first-trip-abroad.jpg", date: "28-06-2026", caption: "our first trip abroad", note: "An unforgettable adventure, with you right by my side. ✈️🌻" }
   ]
 };
 /* ============================================================ */
