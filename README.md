@@ -49,7 +49,7 @@ python3 -m http.server 8000   # then open http://localhost:8000
 ## Share it
 - **Live link (auto-deployed):** every push to `main` is published to GitHub
   Pages by `.github/workflows/deploy-pages.yml`, so the greeting is live at
-  **https://kjell09.github.io/HappyMonthsary/**. Text her that URL.
+  **https://kjell09.github.io/sunshine/**. Text her that URL.
 - **iOS screen share:** open the link (or the file) in Safari and share your
   screen; it fills the display.
 - **Offline:** AirDrop `index.html` to her phone; it works with no internet
