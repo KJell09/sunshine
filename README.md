@@ -2,7 +2,7 @@
 
 A cute, self-contained **Happy Monthsary** greeting page (`index.html`) for Ms.D.
 Tap to open, then falling sunflowers, an animated title, a live
-*months / weeks / days together* counter, a personal message, a little chiptune
+*months / weeks / days together* counter, a personal message, a soft acoustic
 love song, and a photo journal of your memories.
 
 It's one file with no external dependencies, so it works as a shared link or
@@ -27,7 +27,7 @@ const CONFIG = {
   MESSAGE:      `your heartfelt note here...`,
   SIGN:         "Always yours 🌻",
   JOURNAL_FOOT: "…and so many more to come. 💛",
-  MUSIC_SRC:    "music/pixel-love.wav",    // background song (leave "" for none)
+  MUSIC_SRC:    "music/love-song.wav",     // background song (leave "" for none)
 
   JOURNAL: [
     { src: "photos/first-date.jpg", date: "02-01-2026", caption: "our first date", note: "..." },
@@ -40,10 +40,11 @@ const CONFIG = {
 - **Photos:** each `JOURNAL` entry takes a `src` (a file in `photos/`, or a
   `data:` URI), a `date` shown as a small stamp, a `caption`, and a `note`.
   Leave `src` empty for a "📷 add photo later" placeholder.
-- **Music:** `MUSIC_SRC` points at an audio file. A chiptune love song ships in
-  `music/pixel-love.wav`; swap in your own to change it. It starts on the first
-  tap (iOS blocks autoplay until then) and a mute button appears. Use WAV or MP3
-  so iOS Safari can play it.
+- **Music:** `MUSIC_SRC` points at an audio file. A soft acoustic arrangement of
+  *Plaisir d'amour* (1784, public domain — the melody behind "Can't Help Falling
+  in Love") ships in `music/love-song.wav`; swap in your own to change it. It
+  starts on the first tap (iOS blocks autoplay until then) and a mute button
+  appears. Use WAV or MP3 so iOS Safari can play it.
 
 ## Preview locally
 Double-click `index.html`, or serve it (so the photos and song load):
