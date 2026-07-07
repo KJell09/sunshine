@@ -8,7 +8,7 @@
 <style>
   /* ============================================================
      🌻 HAPPY MONTHSARY: a cute, self-contained greeting page.
-     Sunflower theme (Dona's favorite: yellow + sunflowers).
+     Sunflower theme (her favorites: yellow + sunflowers).
      Everything (style + script) lives in this one file so you can
      text the link, AirDrop the file, or screen-share it on iOS.
      To personalize, edit the CONFIG block in the <script> below.
@@ -203,7 +203,7 @@
     </section>
   </main>
 
-  <!-- Optional song: drop an audio file next to this page and set MUSIC_SRC below. -->
+  <!-- Background song (set via CONFIG.MUSIC_SRC); starts on the open tap and loops. -->
   <audio id="song" loop preload="auto"></audio>
 
 <script>
@@ -211,8 +211,7 @@
    ✏️  CONFIG: edit these to personalize your greeting.
    ============================================================ */
 const CONFIG = {
-  PARTNER_NAME:  "Ms.D",                    // what you call her (shown on the card)
-  FULL_NAME:     "Dona",                    // her real name (used in the journal)
+  PARTNER_NAME:  "Ms.D",                    // what you call her (shown everywhere)
   ANNIVERSARY:   "2026-04-19",              // YYYY-MM-DD you got together
   MONTHS:        "auto",                     // a number, or "auto" to compute from the date
   SUBTITLE:      "to my sunshine 🌻",        // small line under the title
@@ -225,7 +224,7 @@ Thank you for your laugh, your hugs, and for choosing me
 every day. I love you more than words fit here.`,
   SIGN:          "Always yours 🌻",          // your signature
   JOURNAL_FOOT:  "…and so many more to come. 💛",
-  MUSIC_SRC:     "",                         // e.g. "our-song.mp3" (leave "" for none)
+  MUSIC_SRC:     "music/pixel-love.wav",     // background song; starts on the open tap
 
   /* Journal photo prints. Leave "src" empty to show a placeholder frame;
      add a filename (e.g. "photos/first-date.jpg") or a data: URI later.
