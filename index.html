@@ -139,6 +139,9 @@
           background-image: repeating-linear-gradient(transparent, transparent 27px, rgba(111,158,75,.18) 28px);
           transform: rotate(1.5deg); flex: 1 1 220px; text-align: left; }
   .entry:nth-child(even) .note { transform: rotate(-1.5deg); }
+  .note-date { display: block; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+               font-size: 12px; letter-spacing: .08em; color: var(--amber); opacity: .85;
+               margin-bottom: 6px; font-variant-numeric: tabular-nums; }
 
   .journal-foot { font-family: var(--script); font-size: 24px; color: var(--amber); margin: 40px 0 0; }
 
@@ -228,11 +231,11 @@ every day. I love you more than words fit here.`,
      add a filename (e.g. "photos/first-date.jpg") or a data: URI later.
      "caption" is the little label under the print; "note" is the handwritten note beside it. */
   JOURNAL: [
-    { src: "photos/first-date.jpg",        caption: "our first date",        note: "The day it all began. One smile from you and I was done for. 🌻" },
-    { src: "photos/first-valentines.jpg",  caption: "our first Valentine's", note: "My favorite Valentine — now, and every year after. 💛" },
-    { src: "photos/first-birthday.jpg",    caption: "your birthday",         note: "Your first birthday together. I just wanted to make your day as bright as you make mine." },
-    { src: "photos/graduation.jpg",        caption: "graduation day",        note: "So proud of you, my brilliant sunflower. You did that. 🎓" },
-    { src: "photos/first-trip-abroad.jpg", caption: "our first trip abroad", note: "New country, same favorite view: you. ✈️🌻" }
+    { src: "photos/first-date.jpg",        date: "02-01-2026", caption: "our first date",        note: "The day it all began. One smile from you and I was done for. 🌻" },
+    { src: "photos/first-valentines.jpg",  date: "14-02-2026", caption: "our first Valentine's", note: "My favorite Valentine — now, and every year after. 💛" },
+    { src: "photos/first-birthday.jpg",    date: "26-04-2026", caption: "your birthday",         note: "Your first birthday together. I just wanted to make your day as bright as you make mine." },
+    { src: "photos/graduation.jpg",        date: "13-05-2026", caption: "graduation day",        note: "So proud of you, my brilliant sunflower. You did that. 🎓" },
+    { src: "photos/first-trip-abroad.jpg", date: "28-06-2026", caption: "our first trip abroad", note: "New country, same favorite view: you. ✈️🌻" }
   ]
 };
 /* ============================================================ */
@@ -303,6 +306,7 @@ function buildJournal() {
   $("entries").innerHTML = entries.map((e) => {
     const caption = escapeHtml(e.caption);
     const note = escapeHtml(e.note);
+    const date = escapeHtml(e.date);
     const inner = e.src
       ? `<img src="${escapeHtml(e.src)}" alt="${caption || "our photo"}">`
       : `<div class="ph"><span class="cam">📷</span><small>add photo later</small></div>`;
@@ -312,7 +316,7 @@ function buildJournal() {
           <div class="photo">${inner}</div>
           <figcaption class="caption">${caption}</figcaption>
         </figure>
-        <p class="note">${note}</p>
+        <p class="note">${date ? `<span class="note-date">${date}</span>` : ""}${note}</p>
       </div>`;
   }).join("");
 }
