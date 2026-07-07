@@ -20,46 +20,38 @@ test("ordinal produces correct English suffixes", async ({ page }) => {
   ]);
 });
 
-test("monthsElapsed counts only completed months", async ({ page }) => {
+test("elapsed breaks the time together into years / months / days", async ({ page }) => {
   const call = (start, now) =>
-    page.evaluate(([s, n]) => window.MSARY.monthsElapsed(s, new Date(n)), [start, now]);
+    page.evaluate(([s, n]) => window.MSARY.elapsed(s, new Date(n)), [start, now]);
 
   const anniv = "2026-04-19";
-  expect(await call(anniv, "2026-04-19T12:00:00")).toBe(0); // day zero
-  expect(await call(anniv, "2026-05-18T12:00:00")).toBe(0); // day before first monthsary
-  expect(await call(anniv, "2026-05-19T12:00:00")).toBe(1); // exactly one month
-  expect(await call(anniv, "2026-07-06T12:00:00")).toBe(2); // mid third month
-  expect(await call(anniv, "2027-04-19T12:00:00")).toBe(12); // one year
+  expect(await call(anniv, "2026-04-19T12:00:00")).toEqual({ years: 0, months: 0, days: 0 }); // day zero
+  expect(await call(anniv, "2026-07-07T12:00:00")).toEqual({ years: 0, months: 2, days: 18 });
+  expect(await call(anniv, "2027-04-19T12:00:00")).toEqual({ years: 1, months: 0, days: 0 }); // first anniversary
+  expect(await call(anniv, "2027-04-18T12:00:00")).toEqual({ years: 0, months: 11, days: 30 }); // day before
 });
 
-test("monthsElapsed never goes negative for a future anniversary", async ({ page }) => {
-  const result = await page.evaluate(() =>
-    window.MSARY.monthsElapsed("2030-01-01", new Date("2026-01-01T12:00:00"))
-  );
-  expect(result).toBe(0);
+test("elapsed clamps a future or invalid anniversary to zero", async ({ page }) => {
+  const call = (start, now) =>
+    page.evaluate(([s, n]) => window.MSARY.elapsed(s, new Date(n)), [start, now]);
+  expect(await call("2030-01-01", "2026-01-01T12:00:00")).toEqual({ years: 0, months: 0, days: 0 });
+  expect(await call("not-a-date", "2026-07-07T12:00:00")).toEqual({ years: 0, months: 0, days: 0 });
 });
 
-test("date helpers return 0 for an invalid anniversary", async ({ page }) => {
-  const result = await page.evaluate((now) => ({
-    days: window.MSARY.daysSince("not-a-date", new Date(now)),
-    months: window.MSARY.monthsElapsed("2026-13-99", new Date(now)),
-  }), "2026-07-06T12:00:00");
-  expect(result).toEqual({ days: 0, months: 0 });
-});
-
-test("monthCount coerces MONTHS to a non-negative integer", async ({ page }) => {
+test("anniversaryNumber uses the configured year and coerces bad values to 1", async ({ page }) => {
   const result = await page.evaluate((now) => {
     const C = window.MSARY.CONFIG;
-    const original = C.MONTHS;
+    const original = C.ANNIVERSARY_YEAR;
     const out = {};
-    C.MONTHS = "5";   out.numericString = window.MSARY.monthCount(new Date(now));
-    C.MONTHS = 3;     out.number = window.MSARY.monthCount(new Date(now));
-    C.MONTHS = "abc"; out.garbage = window.MSARY.monthCount(new Date(now));
-    C.MONTHS = -4;    out.negative = window.MSARY.monthCount(new Date(now));
-    C.MONTHS = original;
+    C.ANNIVERSARY_YEAR = 1;       out.one = window.MSARY.anniversaryNumber(new Date(now));
+    C.ANNIVERSARY_YEAR = 5;       out.five = window.MSARY.anniversaryNumber(new Date(now));
+    C.ANNIVERSARY_YEAR = "abc";   out.garbage = window.MSARY.anniversaryNumber(new Date(now));
+    C.ANNIVERSARY_YEAR = 0;       out.zero = window.MSARY.anniversaryNumber(new Date(now));
+    C.ANNIVERSARY_YEAR = "auto";  out.auto = window.MSARY.anniversaryNumber(new Date("2029-04-19T12:00:00"));
+    C.ANNIVERSARY_YEAR = original;
     return out;
-  }, "2026-07-06T12:00:00");
-  expect(result).toEqual({ numericString: 5, number: 3, garbage: 0, negative: 0 });
+  }, "2026-07-07T12:00:00");
+  expect(result).toEqual({ one: 1, five: 5, garbage: 1, zero: 1, auto: 3 });
 });
 
 test("daysSince counts whole elapsed days and clamps at zero", async ({ page }) => {
@@ -70,4 +62,5 @@ test("daysSince counts whole elapsed days and clamps at zero", async ({ page }) 
   expect(await call(anniv, "2026-04-19T12:00:00")).toBe(0);
   expect(await call(anniv, "2026-04-29T12:00:00")).toBe(10);
   expect(await call(anniv, "2026-01-01T12:00:00")).toBe(0); // future anniversary
+  expect(await call("not-a-date", "2026-07-07T12:00:00")).toBe(0);
 });

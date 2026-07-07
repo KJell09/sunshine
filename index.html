@@ -4,10 +4,10 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#ffc21f" />
-<title>Happy Monthsary, Ms.D 🌻</title>
+<title>Happy Anniversary, Ms.D 🌻</title>
 <style>
   /* ============================================================
-     🌻 HAPPY MONTHSARY: a cute, self-contained greeting page.
+     🌻 HAPPY ANNIVERSARY: a cute, self-contained greeting page.
      Sunflower theme (her favorites: yellow + sunflowers).
      Everything (style + script) lives in this one file so you can
      text the link, AirDrop the file, or screen-share it on iOS.
@@ -180,7 +180,7 @@
     <section id="greeting" class="screen">
       <div class="card">
         <div class="eyebrow" id="eyebrow">For Ms.D</div>
-        <h2 class="title" id="title">Happy Monthsary 🌻</h2>
+        <h2 class="title" id="title">Happy Anniversary 🌻</h2>
         <div class="subtitle" id="subtitle"></div>
         <div class="counter" id="counter"></div>
         <p class="message" id="message"></p>
@@ -211,14 +211,14 @@
    ✏️  CONFIG: edit these to personalize your greeting.
    ============================================================ */
 const CONFIG = {
-  PARTNER_NAME:  "Ms.D",                    // what you call her (shown everywhere)
-  ANNIVERSARY:   "2026-04-19",              // YYYY-MM-DD you got together
-  MONTHS:        "auto",                     // a number, or "auto" to compute from the date
-  SUBTITLE:      "to my sunshine 🌻",        // small line under the title
+  PARTNER_NAME:     "Ms.D",                 // what you call her (shown everywhere)
+  ANNIVERSARY:      "2026-04-19",           // YYYY-MM-DD you got together
+  ANNIVERSARY_YEAR: 1,                       // which anniversary this celebrates, or "auto"
+  SUBTITLE:         "to my sunshine 🌻",     // small line under the title
   MESSAGE:
-`Happy monthsary, Ms.D. 🌻
+`Happy anniversary, Ms.D. 🌻
 
-Every single month with you feels like the best one yet.
+A whole year with you, and it still feels like the best decision I ever made.
 You're my sunflower, always turning my gray days bright.
 Thank you for your laugh, your hugs, and for choosing me
 every day. I love you more than words fit here.`,
@@ -263,27 +263,33 @@ function daysSince(dateStr, now = new Date()) {
   const nowUTC = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
   return Math.max(0, Math.round((nowUTC - startUTC) / 86400000));
 }
-function monthsElapsed(dateStr, now = new Date()) {
+// Break the time together into whole years, months, and days (calendar-accurate,
+// borrowing from the previous month/year like people count anniversaries).
+function elapsed(dateStr, now = new Date()) {
   const start = parseDate(dateStr);
-  if (!start) return 0;
-  let m = (now.getFullYear() - start.getFullYear()) * 12 + (now.getMonth() - start.getMonth());
-  if (now.getDate() < start.getDate()) m--;
-  return Math.max(0, m);
+  if (!start) return { years: 0, months: 0, days: 0 };
+  let y = now.getFullYear() - start.getFullYear();
+  let m = now.getMonth() - start.getMonth();
+  let d = now.getDate() - start.getDate();
+  if (d < 0) { m--; d += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); }
+  if (m < 0) { y--; m += 12; }
+  if (y < 0) { y = 0; m = 0; d = 0; }
+  return { years: y, months: m, days: d };
 }
-function monthCount(now = new Date()) {
-  if (CONFIG.MONTHS === "auto") return monthsElapsed(CONFIG.ANNIVERSARY, now);
+function anniversaryNumber(now = new Date()) {
+  if (CONFIG.ANNIVERSARY_YEAR === "auto") return Math.max(1, elapsed(CONFIG.ANNIVERSARY, now).years);
   // Coerce to a non-negative integer so a stray string can't render as NaN or
-  // inject markup when it flows into the counter's innerHTML.
-  const n = Math.floor(Number(CONFIG.MONTHS));
-  return Number.isFinite(n) && n >= 0 ? n : 0;
+  // inject markup when it flows into the title.
+  const n = Math.floor(Number(CONFIG.ANNIVERSARY_YEAR));
+  return Number.isFinite(n) && n >= 1 ? n : 1;
 }
 
 function buildCounter() {
-  const days = daysSince(CONFIG.ANNIVERSARY);
+  const e = elapsed(CONFIG.ANNIVERSARY);
   const cells = [
-    [monthCount(), "Months"],
-    [Math.floor(days / 7), "Weeks"],
-    [days, "Days"],
+    [e.years, "Years"],
+    [e.months, "Months"],
+    [e.days, "Days"],
   ];
   $("counter").innerHTML = cells
     .map(([n, label]) => `<div class="pill"><b>${n}</b><span>${label}</span></div>`)
@@ -321,7 +327,7 @@ function buildJournal() {
 }
 
 function fillContent() {
-  $("title").textContent = `Happy ${ordinal(monthCount())} Monthsary 🌻`;
+  $("title").textContent = `Happy ${ordinal(anniversaryNumber())} Anniversary 🌻`;
   $("eyebrow").textContent = `For ${CONFIG.PARTNER_NAME}`;
   $("subtitle").textContent = CONFIG.SUBTITLE;
   $("message").textContent = CONFIG.MESSAGE;
@@ -388,7 +394,7 @@ start.addEventListener("keydown", (e) => {
 });
 
 // Exposed for automated tests (harmless in production).
-window.MSARY = { CONFIG, ordinal, daysSince, monthsElapsed, monthCount, buildCounter, buildJournal, escapeHtml };
+window.MSARY = { CONFIG, ordinal, daysSince, elapsed, anniversaryNumber, buildCounter, buildJournal, escapeHtml };
 </script>
 </body>
 </html>
